@@ -1,0 +1,29 @@
+detectors:
+  UtilityFunction:
+    exclude:
+      - 'options'
+      - 'save_user'
+      - 'read_user'
+      - 'get_user'
+      - 'api_header'
+
+  IrresponsibleModule:
+    exclude:
+      - 'Home'
+      - 'LoginPage'
+      - 'RegistrationPage'
+      - 'MenuSection'
+      - 'MyPage'
+      - 'User'
+      - ProjectsPage
+      - Project
+
+  TooManyInstanceVariables:
+    max_instance_variables: 10
+
+  TooManyStatements:
+    max_statements: 15
+
+  DuplicateMethodCall:
+    exclude:
+      - 'UserHelper#register_user'
