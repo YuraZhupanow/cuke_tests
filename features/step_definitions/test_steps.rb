@@ -1,7 +1,7 @@
 Given /^I am not logged in visitor$/ do
   @home_page = Home.new
   @home_page.load
-  expect(@home_page).to have_content('Home')
+  expect(@home_page.menu.login).to be_present
 end
 
 When /^I register (admin|developer) user via Redmine (UI|API)$/ do |user_role, reg_type|
@@ -19,11 +19,10 @@ When /^I register (admin|developer) user via Redmine (UI|API)$/ do |user_role, r
 end
 
 Then /^I see the (admin|developer) user is registered$/ do |user_role|
-  @account_page = AccountPage.new
   if user_role == 'admin'
-    expect(@account_page.user_mail.value).to eq(@admin.email.to_s)
+    expect(get_users_mails).to include(@admin.email.to_s)
   else
-    expect(@account_page.user_mail.value).to eq(@developer.email.to_s)
+    expect(get_users_mails).to include(@developer.email.to_s)
   end
 end
 
@@ -54,12 +53,25 @@ Then /^I see that project is created on (UI|API) level$/ do |level|
   end
 end
 
-When('I add {string} user as a member of the project') do |_string|
-  pending # Write code here that turns the phrase above into concrete actions
+When /^I add (admin|developer) user as a member of the project$/ do |user_role|
+  find('#tab-members').click
+  find('.icon-add').click
+  within('#ajax-modal') do
+    check @developer.first_name
+    check 'Developer'
+    find('#member-add-submit').click
+  end
 end
 
-Then('I can can see {string} user in the project member list') do |_string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then /^I can can see (admin|developer) user in the project member list$/ do |user_role|
+  user = user_role == 'admin' ? @admin : @developer
+  within(find('a', text: user.first_name.to_s).find(:xpath, '../..')) do
+    if user_role == 'admin'
+      expect(page).to have_content('Manager')
+    else
+      expect(page).to have_content('Developer')
+    end
+  end
 end
 
 When('I create an issue and assign {string} user to created issue') do |_string|
@@ -75,7 +87,7 @@ Then('I see {string} user is assigned to the issue') do |_string|
 end
 
 When('I logout') do
-  pending # Write code here that turns the phrase above into concrete actions
+  find('.logout').click
 end
 
 When('I login as {string} user') do |_string|

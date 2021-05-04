@@ -8,18 +8,18 @@ Feature: Integration functional testing of Redmine user rights
 
     When I register admin user via Redmine UI
     Then I see the admin user is registered
-    And I become logged in as admin user
+     And I become logged in as admin user
 
     When I create a project
     Then I see that project is created on UI level
      And I see that project is created on API level
-    And I debug
 
-    When I register 'developer' user via Redmine 'API'
-    Then I see the 'developer' user is registered
+    When I register developer user via Redmine API
+    Then I see the developer user is registered
 
-    When I add 'developer' user as a member of the project
-    Then I can can see 'developer' user in the project member list
+    When I add developer user as a member of the project
+    Then I can can see developer user in the project member list
+     And I debug
 
     When I create an issue and assign 'developer' user to created issue
     Then I see the issue is created

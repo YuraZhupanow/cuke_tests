@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class MainMenu < SitePrism::Section
+class ProjectMenuSection < SitePrism::Section
   element :projects, '.projects'
   element :activity, '.activity'
   element :issues, '.issues'

@@ -4,7 +4,7 @@ class ProjectsPage < SitePrism::Page
   set_url 'https://testautomate.me/redmine/projects'
   # sections
   section :menu, MenuSection, '#top-menu'
-  section :menu, MainMenu, '#main-menu'
+  section :menu, ProjectMenuSection, '#main-menu'
   # elements
   element :page_header, '.current-project'
   element :available_projects, '#projects-index'

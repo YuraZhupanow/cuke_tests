@@ -43,6 +43,13 @@ module UserHelper
     projects.each { |p| projects_names << p['name'] }
     projects_names
   end
+
+  def get_users_mails
+    mails_list = []
+    users = fetch_users['users']
+    users.each { |u| mails_list << u['mail'] }
+    mails_list
+  end
 end
 
 World(UserHelper)

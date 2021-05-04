@@ -21,8 +21,17 @@ module ApiWrapper
 
     raise 'User was not created' unless response.code == 201
 
+    puts @user.login
+
     # save_user @user
     #save_user(@user)
+    #parse_body(response)
+  end
+
+  def fetch_users
+    response = RestClient.get "#{ENV['ROOT_URL']}/users.json", admin_json_api_header
+    raise 'Projects were not fetched' unless response.code == 200
+
     parse_body(response)
   end
 
@@ -44,6 +53,7 @@ module ApiWrapper
     response = RestClient.get "#{ENV['ROOT_URL']}/projects.json", admin_json_api_header
     raise 'Projects were not fetched' unless response.code == 200
 
+    puts @project.name
     parse_body(response)
 
   end
