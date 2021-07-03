@@ -74,8 +74,16 @@ Then /^I can can see (admin|developer) user in the project member list$/ do |use
   end
 end
 
-When('I create an issue and assign {string} user to created issue') do |_string|
-  pending # Write code here that turns the phrase above into concrete actions
+When /^I create an issue and assign (admin|developer) user to created issue$/ do |user_role|
+  #{@project.identifier}visit "https://testautomate.me/redmine/projects/#{@project.identifier}/settings/issues"
+  #{@project.identifier}page.all('.floating > input').each { |e| e.set(true) }
+  #{@project.identifier}click('Save')
+
+  #{@project.identifier}@issues_page = IssuesPage.news
+  #{@project.identifier}@issues_page.load
+  #{@project.identifier}@issues_page.aad_issue.click
+  user = user_role == 'admin' ? @admin : @developer
+  create_issue(user)
 end
 
 Then('I see the issue is created') do

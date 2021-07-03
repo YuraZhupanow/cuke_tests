@@ -21,6 +21,8 @@ module ApiWrapper
 
     raise 'User was not created' unless response.code == 201
 
+    created_user = parse_body(response)
+    @user.id = created_user['user']['id']
     puts @user.login
 
     # save_user @user
@@ -56,6 +58,19 @@ module ApiWrapper
     puts @project.name
     parse_body(response)
 
+  end
+
+  def create_issue(user)
+    response = RestClient.post "#{ENV['ROOT_URL']}/issues.json",
+                               {
+                                 "issue": {
+                                   "project_id": @project.identifier,
+                                   "assigned_to_id": user.id
+                                 }
+                               }.to_json,
+                               admin_json_api_header
+    #raise 'Issue was not created' unless response.code == 201
+    binding.pry
   end
 
   def admin_json_api_header
