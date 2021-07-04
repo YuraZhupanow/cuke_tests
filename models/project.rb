@@ -4,10 +4,12 @@ require 'ffaker'
 
 class Project
   attr_reader :name, :identifier
+  attr_accessor :id
 
   def initialize
     @name = FFaker::Company.name
     @identifier = generate_id
+    @id = id
   end
 
   def generate_id

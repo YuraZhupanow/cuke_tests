@@ -7,7 +7,6 @@ Feature: Integration functional testing of Redmine user rights
     Given I am not logged in visitor
 
     When I register admin user via Redmine UI
-    And I debug
     Then I see the admin user is registered
      And I become logged in as admin user
 
@@ -20,9 +19,9 @@ Feature: Integration functional testing of Redmine user rights
 
     When I add developer user as a member of the project
     Then I can can see developer user in the project member list
+     And I debug
 
     When I create an issue and assign 'developer' user to created issue
-    And I debug
     Then I see the issue is created
      And I see 'developer' user is assigned to the issue
 

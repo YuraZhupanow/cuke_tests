@@ -4,7 +4,7 @@ class ProjectsPage < SitePrism::Page
   set_url 'https://testautomate.me/redmine/projects'
   # sections
   section :menu, MenuSection, '#top-menu'
-  section :menu, ProjectMenuSection, '#main-menu'
+  section :projects_menu, ProjectMenuSection, '#main-menu'
   # elements
   element :page_header, '.current-project'
   element :available_projects, '#projects-index'
@@ -17,7 +17,7 @@ class ProjectsPage < SitePrism::Page
   element :save, 'icon icon-save'
 
   def create_project(project)
-    self.add_project_button.click
+    add_project_button.click
     find('#project_name').set(project.name.to_s)
     find('#project_identifier').set(project.identifier.to_s)
     click_button('Create')

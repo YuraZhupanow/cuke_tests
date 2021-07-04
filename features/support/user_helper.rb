@@ -15,7 +15,7 @@ module UserHelper
   end
 
   def register_user(user)
-    @registration_page = RegistrationPage.new
+    @registration_page ||= RegistrationPage.new
 
     @registration_page.user_login.set user.login
     @registration_page.user_password.set user.password
@@ -26,14 +26,14 @@ module UserHelper
 
     @registration_page.submit_button.click
 
-    #save_user @user
+    # save_user @user
   end
 
-  def login_user(credentials)
-    @login_page = LoginPage.new
+  def login_user(user)
+    @login_page ||= LoginPage.new
 
-    @login_page.user_login.set credentials.login
-    @login_page.user_password.set credentials.password
+    @login_page.user_login.set user.login
+    @login_page.user_password.set user.password
     @login_page.login_button.click
   end
 

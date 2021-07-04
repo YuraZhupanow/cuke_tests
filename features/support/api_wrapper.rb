@@ -26,8 +26,8 @@ module ApiWrapper
     puts @user.login
 
     # save_user @user
-    #save_user(@user)
-    #parse_body(response)
+    # save_user(@user)
+    # parse_body(response)
   end
 
   def fetch_users
@@ -39,7 +39,6 @@ module ApiWrapper
 
   def create_project
     @project = Project.new
-
     response = RestClient.post "#{ENV['ROOT_URL']}/projects.json",
                                {
                                  "project": {
@@ -48,7 +47,11 @@ module ApiWrapper
                                  }
                                }.to_json,
                                admin_json_api_header
+
     raise 'Project was not created' unless response.code == 201
+
+    created_project = parse_body(response)
+    @project.id = created_project['project']['id']
   end
 
   def fetch_projects
@@ -57,20 +60,31 @@ module ApiWrapper
 
     puts @project.name
     parse_body(response)
-
   end
 
   def create_issue(user)
     response = RestClient.post "#{ENV['ROOT_URL']}/issues.json",
                                {
                                  "issue": {
-                                   "project_id": @project.identifier,
+                                   "project_id": @project.id,
+                                   "subject": "#{@project.name}_issue",
+                                   "priority_id": rand(5),
+                                   "tracker_id": rand(3),
+                                   "status_id": 1,
                                    "assigned_to_id": user.id
                                  }
                                }.to_json,
                                admin_json_api_header
-    #raise 'Issue was not created' unless response.code == 201
-    binding.pry
+
+    raise 'Issue was not created' unless response.code == 201
+
+    created_issue = parse_body(response)
+    @issue_id = created_issue['issue']['id']
+  end
+
+  def fetch_issue(issue_id)
+    response = RestClient.get "#{ENV['ROOT_URL']}/issues/#{issue_id}.json", admin_json_api_header
+    raise 'Issue was not fetched' unless response.code == 200
   end
 
   def admin_json_api_header
@@ -81,7 +95,6 @@ module ApiWrapper
   def parse_body(response)
     JSON.parse(response.body)
   end
-
 end
 
 World(ApiWrapper)

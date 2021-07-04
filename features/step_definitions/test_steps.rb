@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Given /^I am not logged in visitor$/ do
   @home_page = Home.new
   @home_page.load
@@ -27,6 +29,7 @@ Then /^I see the (admin|developer) user is registered$/ do |user_role|
 end
 
 Then /^I become logged in as (admin|developer) user$/ do |user_role|
+  @home_page ||= Home.new
   if user_role == 'admin'
     expect(@home_page.menu.logged_as.text).to include("Logged in as #{@admin.login}")
   else
@@ -53,7 +56,7 @@ Then /^I see that project is created on (UI|API) level$/ do |level|
   end
 end
 
-When /^I add (admin|developer) user as a member of the project$/ do |user_role|
+When /^I add (admin|developer) user as a member of the project$/ do |_user_role|
   find('#tab-members').click
   find('.icon-add').click
   within('#ajax-modal') do
@@ -74,32 +77,39 @@ Then /^I can can see (admin|developer) user in the project member list$/ do |use
   end
 end
 
-When /^I create an issue and assign (admin|developer) user to created issue$/ do |user_role|
-  #{@project.identifier}visit "https://testautomate.me/redmine/projects/#{@project.identifier}/settings/issues"
-  #{@project.identifier}page.all('.floating > input').each { |e| e.set(true) }
-  #{@project.identifier}click('Save')
-
-  #{@project.identifier}@issues_page = IssuesPage.news
-  #{@project.identifier}@issues_page.load
-  #{@project.identifier}@issues_page.aad_issue.click
-  user = user_role == 'admin' ? @admin : @developer
-  create_issue(user)
+When /^I create an issue and assign (admin|developer) user to created issue$/ do |_user_role|
+  #  user = user_role == 'admin' ? @admin : @developer
+  #  create_issue(user)
+  pending # Write code here that turns the phrase above into concrete actions
 end
 
 Then('I see the issue is created') do
-  pending # Write code here that turns the phrase above into concrete actions
+  fetch_issue(@issue_id)
 end
 
-Then('I see {string} user is assigned to the issue') do |_string|
-  pending # Write code here that turns the phrase above into concrete actions
+Then /^I see (admin|developer) user is assigned to the issue$/ do |user_role|
+  @projects_page ||= ProjectsPage.new
+  @projects_page.projects_menu.issues.click
+
+  within(find('a', text: @issue_id).find(:xpath, '../..')) do
+    expect(page).to have_content(user_role.first_name)
+  end
 end
 
 When('I logout') do
   find('.logout').click
 end
 
-When('I login as {string} user') do |_string|
-  pending # Write code here that turns the phrase above into concrete actions
+When /^I login as (admin|developer) user$/ do |user_role|
+  @home_page ||= Home.new
+  @home_page.menu.login.click
+  expect(page).to have_current_path('/login')
+
+  if user_role == 'admin'
+    login_user(@admin)
+  else
+    login_user(@developer)
+  end
 end
 
 When('I track time for the assigned issue') do

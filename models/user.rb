@@ -6,7 +6,7 @@ class User
   attr_reader :login, :password, :first_name, :last_name, :email, :role
   attr_accessor :id
 
-  def initialize(role = 'developer', id = 0)
+  def initialize(role = 'developer')
     @login = FFaker::Internet.user_name
     @password = FFaker::Internet.password
     @first_name = FFaker::Name.first_name
